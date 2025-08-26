@@ -4,49 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pet Safe - Perfil</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+  }
+  .pet-profile {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    display: inline-block;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .pet-profile img {
+    width: 250px;
+    border-radius: 10px;
+  }
+  .pet-profile h2 {
+    margin: 10px 0 5px;
+  }
+  .pet-profile p {
+    margin: 5px 0;
+  }
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+</style>
 </head>
 <body>
+
 <h1>Perfil do Pet</h1>
-<div id="profileContainer" class="pet-profile"></div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_DOMINIO.firebaseapp.com",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_BUCKET.appspot.com",
-  messagingSenderId: "SEU_MESSAGING_ID",
-  appId: "SEU_APP_ID"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+<div id="profileContainer" class="pet-profile">
+  <img src="https://via.placeholder.com/250" alt="Pet Exemplo">
+  <h2>Rex</h2>
+  <p><strong>Dono:</strong> João Silva</p>
+  <p><strong>Telefone:</strong> <a href="tel:11999999999">11999999999</a></p>
+  <p><strong>Observações:</strong> Nenhuma</p>
+</div>
 
-const urlParams = new URLSearchParams(window.location.search);
-const petId = urlParams.get('id');
-const container = document.getElementById('profileContainer');
-
-db.collection("pets").doc(petId).get()
-.then((doc) => {
-  if(doc.exists){
-    const data = doc.data();
-    container.innerHTML = `
-      <img src="${data.foto || 'https://via.placeholder.com/250'}" alt="${data.nomePet}">
-      <h2>${data.nomePet}</h2>
-      <p><strong>Dono:</strong> ${data.nomeDono}</p>
-      <p><strong>Telefone:</strong> <a href="tel:${data.telefone}">${data.telefone}</a></p>
-      <p><strong>Observações:</strong> ${data.observacoes || 'Nenhuma'}</p>
-    `;
-  } else {
-    container.innerHTML = "<p>Pet não encontrado</p>";
-  }
-})
-.catch((error) => {
-  console.error("Erro ao buscar pet: ", error);
-  container.innerHTML = "<p>Erro ao carregar perfil do pet.</p>";
-});
-</script>
 </body>
 </html>
