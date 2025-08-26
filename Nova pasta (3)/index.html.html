@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Safe - Perfil</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Perfil do Pet</h1>
+<div id="profileContainer" class="pet-profile"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_DOMINIO.firebaseapp.com",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_BUCKET.appspot.com",
+  messagingSenderId: "SEU_MESSAGING_ID",
+  appId: "SEU_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const urlParams = new URLSearchParams(window.location.search);
+const petId = urlParams.get('id');
+const container = document.getElementById('profileContainer');
+
+db.collection("pets").doc(petId).get()
+.then((doc) => {
+  if(doc.exists){
+    const data = doc.data();
+    container.innerHTML = `
+      <img src="${data.foto || 'https://via.placeholder.com/250'}" alt="${data.nomePet}">
+      <h2>${data.nomePet}</h2>
+      <p><strong>Dono:</strong> ${data.nomeDono}</p>
+      <p><strong>Telefone:</strong> <a href="tel:${data.telefone}">${data.telefone}</a></p>
+      <p><strong>Observações:</strong> ${data.observacoes || 'Nenhuma'}</p>
+    `;
+  } else {
+    container.innerHTML = "<p>Pet não encontrado</p>";
+  }
+})
+.catch((error) => {
+  console.error("Erro ao buscar pet: ", error);
+  container.innerHTML = "<p>Erro ao carregar perfil do pet.</p>";
+});
+</script>
+</body>
+</html>
